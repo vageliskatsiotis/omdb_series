@@ -14,6 +14,7 @@ if (platform.system() == "Windows"):
 	import winapps
 from mutagen import MutagenError
 from mutagen.mp4 import MP4
+from io import StringIO
 
 # Main
 def main():
@@ -98,7 +99,7 @@ def ApiCall(title_series, season):
 	if season != "":
 		url = "https://www.omdbapi.com/?t=" + query + "&" + "Season=" + season + "&" + "apikey=" + apikey
 	else :
-		url = "https://www.omdbapi.com/?t=" + query + "&" + "apikey=" + apikey
+		url = "https://www.omdbapi.com/?t=" + query + "&" + apikey
 	# JSON to string
 	data = json.load(urllib.request.urlopen(url))
 	# Return data
@@ -117,9 +118,22 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 	# Loop through files
 	for root, dirs, files in os.walk(directory):
 		for file in files:
-			if query in file:
+			# Split title in words if query is more than one
+			title_array = title_series.split()
+			if len(title_array) > 1:
+				i = 0
+				sb = StringBuilder()
+				# Build string using split words
+				while i < len(title_array):
+					sb.Append(title_array[i] + ".")
+					i += 1
+				# Assign to query minus the last dot
+				query = str(sb)[:-1]
+			else:
+				query = title_series
+			if ((query in file) or (query.lower() in file)):
 				if season in file:
-					# Adapt to API"s response for episode titles from 1-9 and add 0 in front
+					# Adapt to API's response for episode titles from 1-9 and add 0 in front
 					if len(episode_no) == 1:
 						new_episode_no = "0" + str(episode_no)
 					else:
@@ -128,7 +142,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 					if len(season) == 1:
 						season = "0" + str(season)
 					# Search parameters in filename eg S01E01
-					search_str = re.search(r"(?:s|S|season|Season^)" + season + "(?:e|E|episode|Episode^)" + re.escape(new_episode_no), file)
+					search_str = re.search(r"(?:s|S|season|Season^)" + season + r"(?:e|E|episode|Episode^)" + re.escape(new_episode_no), file)
 					if(search_str):
 						# Get file"s length
 						file_length = len(file)
@@ -191,6 +205,19 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 									raise
 						# Print successfull message
 						print("Found episode No " + new_episode_no + ": " + episode_title + extension)
+
+# StringBuilder Class
+class StringBuilder:
+	_file_str = None
+
+	def __init__(self):
+		self._file_str = StringIO()
+
+	def Append(self, str):
+		self._file_str.write(str)
+
+	def __str__(self):
+		return self._file_str.getvalue()
 
 if __name__ == "__main__":
   main()

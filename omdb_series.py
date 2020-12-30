@@ -98,7 +98,7 @@ def ApiCall(title_series, season):
 	if season != "":
 		url = "https://www.omdbapi.com/?t=" + query + "&" + "Season=" + season + "&" + "apikey=" + apikey
 	else :
-		url = "https://www.omdbapi.com/?t=" + query + "&" + apikey
+		url = "https://www.omdbapi.com/?t=" + query + "&" + "apikey=" + apikey
 	# JSON to string
 	data = json.load(urllib.request.urlopen(url))
 	# Return data

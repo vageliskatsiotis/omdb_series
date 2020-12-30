@@ -126,9 +126,9 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 						new_episode_no = episode_no
 					# Change season string for single digit No inpu
 					if len(season) == 1:
-						new_season = "0" + str(season)
+						season = "0" + str(season)
 					# Search parameters in filename eg S01E01
-					search_str = re.search(r"(?:s|S|season|Season^)" + new_season + "(?:e|E|episode|Episode^)" + re.escape(new_episode_no), file)
+					search_str = re.search(r"(?:s|S|season|Season^)" + season + "(?:e|E|episode|Episode^)" + re.escape(new_episode_no), file)
 					if(search_str):
 						# Get file"s length
 						file_length = len(file)
@@ -140,7 +140,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 							# Continue to next episode title if found
 							episode_title = episode_title.replace(str(invalid_match_character[0]), "")
 						# Prepare rename string
-						rename_str = title_series + " - " + "S0" + season + "E" + new_episode_no + " - " + episode_title + extension
+						rename_str = title_series + " - " + "S" + season + "E" + new_episode_no + " - " + episode_title + extension
 						# Get file"s name
 						original_filename = os.path.join(root, file)
 						# Get replacemet filename
@@ -148,7 +148,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 						# Rename file
 						os.rename(original_filename, new_filename)
 						# Metadata title
-						meta_title = title_series + " - " + "S0" + season + "E" + new_episode_no + " - " + episode_title
+						meta_title = title_series + " - " + "S" + season + "E" + new_episode_no + " - " + episode_title
 						# Add metadata title and year for mp4 files
 						if extension == ".mp4":
 							try:

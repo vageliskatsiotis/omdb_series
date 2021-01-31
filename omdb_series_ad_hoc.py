@@ -18,10 +18,13 @@ def main():
 	title = input("Insert Title: ")
 	# Input year
 	year = input("Input Year: ")
-	# Input season
-	season = input("Insert Season: ")
-	# Input episode_no
-	episode_no = input("Input Episode No: ")
+	# Get season and episode no from title
+	search_str = re.search(r"(?:s|S|season|Season^)\d{2}(?:e|E|episode|Episode^)\d{2}", title)
+	season_match = re.search(r"(.+?:s|S|season|Season^)\d{2}", search_str.group(0))
+	season = season_match.group(0)[len(season_match.group(0)) - 2 :]
+	episode_match = re.search(r"(.+?:e|E|episode|Episode^)\d{2}", search_str.group(0))
+	episode_no = episode_match.group(0)[len(episode_match.group(0)) - 2 :]
+
 	# Define home directory
 	directory = os.path.dirname(os.path.realpath(__file__))
 	try:

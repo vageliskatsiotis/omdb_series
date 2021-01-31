@@ -130,4 +130,8 @@ def RenameLoop(new_title, season, episode_no, year, directory):
 					print("Found episode No " + new_title + extension)
 						
 if __name__ == "__main__":
-  main()
+	while True:
+		main()
+		again = input('Restart? ')
+		if again.lower() not in ('yes', 'y'):
+			break

@@ -32,7 +32,27 @@ def main():
 		print(data["Error"])
 	else:
 		return
-	
+
+# Api Call
+def ApiCall(title_series, season):
+
+	url = ""
+	data = ""
+
+	# Define apikey
+	apikey = ""
+	# Escape characters on title
+	query = urllib.parse.quote(title_series)
+	# Insert season in query if exists
+	if season != "":
+		url = "https://www.omdbapi.com/?t=" + query + "&" + "Season=" + season + "&" + "apikey=" + apikey
+	else :
+		url = "https://www.omdbapi.com/?t=" + query + "&" + "apikey=" + apikey
+	# JSON to string
+	data = json.load(urllib.request.urlopen(url))
+	# Return data
+	return data
+
 # Api Reponse
 def Response(title_series, season, data):
 	# Define home directory
@@ -41,7 +61,7 @@ def Response(title_series, season, data):
 	query = urllib.parse.quote(title_series)
 
 	if season != "":
-	# Get number of episodes
+		# Get number of episodes
 		episodes = data["Episodes"]
 		# Loop through episodes
 		for e in episodes:
@@ -56,8 +76,9 @@ def Response(title_series, season, data):
 				# Get into directory
 				os.chdir(dirPath)
 				# Iterate on current directory
-				RenameLoop(season, title_series, episode_title, episode_no, episode_year, query, dirPath)
-		
+				RenameLoop(season, title_series, episode_title,
+				           episode_no, episode_year, query, dirPath)
+
 			# Handle Exceptions - Create file with not found episodes
 			except OSError as e:
 				if e.errno != errno.EEXIST:
@@ -84,26 +105,6 @@ def Response(title_series, season, data):
 		except OSError as e:
 			if e.errno != errno.EEXIST:
 				raise
-
-# Api Call
-def ApiCall(title_series, season):
-
-	url = ""
-	data = ""
-
-	# Define apikey
-	apikey = ""
-	# Escape characters on title
-	query = urllib.parse.quote(title_series)
-	# Insert season in query if exists
-	if season != "":
-		url = "https://www.omdbapi.com/?t=" + query + "&" + "Season=" + season + "&" + "apikey=" + apikey
-	else :
-		url = "https://www.omdbapi.com/?t=" + query + "&" + apikey
-	# JSON to string
-	data = json.load(urllib.request.urlopen(url))
-	# Return data
-	return data
 
 # Check if MKVToolNix is installed on Windows
 def CheckMKVToolNix():

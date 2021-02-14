@@ -95,16 +95,19 @@ def Response(title_series, season, data):
 	else:
 		#Get poster
 		poster = data["Poster"]
-		try:
-			# Get into directory
-			os.chdir(dirPath)
-			# Save image
-			urllib.request.urlretrieve(poster, title_series + ".jpg")
-			# Print successful massage
-			print("Poster image saved!")
-		except OSError as e:
-			if e.errno != errno.EEXIST:
-				raise
+		if poster == "N/A":
+			print("Poster not found!")
+		else:
+			try:
+				# Get into directory
+				os.chdir(dirPath)
+				# Save image
+				urllib.request.urlretrieve(poster, title_series + ".jpg")
+				# Print successful massage
+				print("Poster image saved!")
+			except OSError as e:
+				if e.errno != errno.EEXIST:
+					raise
 
 # Check if MKVToolNix is installed on Windows
 def CheckMKVToolNix():

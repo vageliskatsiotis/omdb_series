@@ -149,8 +149,23 @@ def RenameLoop(directory):
 						except OSError as e:
 							if e.errno != errno.EEXIST:
 								raise
+					#Get poster
+					poster = data["Poster"]
+					if poster == "N/A":
+						print("Poster not found!")
+					else:
+						try:
+							# Get into directory
+							os.chdir(root)
+							# Save image
+							urllib.request.urlretrieve(poster, meta_title + ".jpg")
+							# Print successful massage
+							print("Poster image saved!")
+						except OSError as e:
+							if e.errno != errno.EEXIST:
+								raise
 					# Print successfull message
-					print("Found episode No " + meta_title + extension)
+					print("Found movie " + meta_title + extension)
 
 # StringBuilder Class
 class StringBuilder:

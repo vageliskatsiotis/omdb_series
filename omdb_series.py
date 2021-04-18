@@ -18,9 +18,6 @@ from io import StringIO
 
 # Main
 def main():
-	
-	# Input series title
-	title_series = input("Insert Series Title: ")
 	# Input season number
 	season = input("Insert Season No: ")
 	# Make Api Call
@@ -59,7 +56,7 @@ def Response(title_series, season, data):
 	dirPath = os.path.dirname(os.path.realpath(__file__))
 	# Escape characters on title
 	query = urllib.parse.quote(title_series)
-
+	
 	if season != "":
 		# Get number of episodes
 		episodes = data["Episodes"]
@@ -223,5 +220,12 @@ class StringBuilder:
 	def __str__(self):
 		return self._file_str.getvalue()
 
+# Input series title
+title_series = input("Insert Series Title: ")
+
 if __name__ == "__main__":
-  main()
+	while True:
+		main()
+		again = input('Restart? ')
+		if again.lower() not in ('yes', 'y'):
+			break

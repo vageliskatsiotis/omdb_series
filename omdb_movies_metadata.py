@@ -51,7 +51,7 @@ def CheckMKVToolNix():
 			return False
 
 # Api Call
-def ApiCall(title):
+def ApiCall(title, year):
 
 	url = ""
 	data = ""
@@ -62,7 +62,7 @@ def ApiCall(title):
 	query = urllib.parse.quote(title)
 	# Insert season in query if exists
 	if title != "":
-		url = "https://www.omdbapi.com/?t=" + query + "&" + "apikey=" + apikey
+		url = "https://www.omdbapi.com/?t=" + query + "&" + "y="+ year + "&" + "apikey=" + apikey
 	# JSON to string
 	data = json.load(urllib.request.urlopen(url))
 	# Return data
@@ -92,8 +92,10 @@ def RenameLoop(directory):
 					query = str(sb)[:-12]
 				else:
 					query = file[:-12]
+				#get year for filename
+				year = file[-9:-5]
 				# Make API call
-				data = ApiCall(query)
+				data = ApiCall(query, year)
 				if(data["Response"] == "True"):
 					# Get file's length
 					file_length = len(file)

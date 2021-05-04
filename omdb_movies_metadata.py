@@ -168,10 +168,14 @@ def RenameLoop(directory):
 						try:
 							# Get into directory
 							os.chdir(root)
-							# Save image
-							urllib.request.urlretrieve(poster, meta_title + ".jpg")
-							# Print successful massage
-							print("Poster image saved!")
+
+							# Check if image already exists in dir
+							checkPoster = CheckPoster(root, meta_title)
+							if not checkPoster:
+								# Save image
+								urllib.request.urlretrieve(poster, meta_title + ".jpg")
+								# Print successful massage
+								print("Poster image saved!")
 						except OSError as e:
 							if e.errno != errno.EEXIST:
 								raise								
@@ -190,6 +194,11 @@ class StringBuilder:
 
 	def __str__(self):
 		return self._file_str.getvalue()
+
+# Check if poster is already in directory is installed on Windows
+def CheckPoster(dir, filename):
+	if (os.path.exists(os.path.join(dir, filename + ".jpg"))):
+		return True
 
 if __name__ == "__main__":
 	main()

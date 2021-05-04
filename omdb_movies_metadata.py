@@ -32,15 +32,6 @@ def main():
 	except OSError as e:
 		if e.errno != errno.EEXIST:
 			raise
-		else:
-			# Open a file with access mode "a"
-			file = open(os.path.expanduser("~") + "/not_found.txt", "a")
-			# Append title at the end of file
-			file.write()
-			# New line
-			file.write("\n")
-			# Close the file
-			file.close()
 
 # Check if MKVToolNix is installed on Windows
 def CheckMKVToolNix():
@@ -94,21 +85,21 @@ def RenameLoop(directory):
 					query = file[:-12]
 				#get year for filename
 				year = file[-9:-5]
+				# Get file's length
+				file_length = len(file)
+				# Get file's extension
+				extension = file[file_length - 4 :]
+				# Get file's name
+				original_filename = os.path.join(root, file)
+				# Get replacemet filename
+				new_filename = os.path.join(root, file)
+				# Rename file
+				os.rename(original_filename, new_filename)
+				# Metadata title
+				meta_title = file[:-4]
 				# Make API call
 				data = ApiCall(query, year)
 				if(data["Response"] == "True"):
-					# Get file's length
-					file_length = len(file)
-					# Get file's extension
-					extension = file[file_length - 4 :]
-					# Get file's name
-					original_filename = os.path.join(root, file)
-					# Get replacemet filename
-					new_filename = os.path.join(root, file)
-					# Rename file
-					os.rename(original_filename, new_filename)
-					# Metadata title
-					meta_title = file[:-4]
 					# Add metadata title and year and remove comments for mp4 files
 					if extension == ".mp4":
 						try:
@@ -151,6 +142,17 @@ def RenameLoop(directory):
 						except OSError as e:
 							if e.errno != errno.EEXIST:
 								raise
+					else:
+						# Open a file with access mode "a"
+						file = open(os.path.expanduser("~") + "/not_found.txt", "a")
+						# Append title at the end of file
+						file.write(meta_title)
+						# New line
+						file.write("\n")
+						# Close the file
+						file.close()
+						#Print
+						print("Filetype mp4 or mkv not found for " + new_filename)
 					#Get poster
 					poster = data["Poster"]
 					if poster == "N/A":
@@ -181,6 +183,15 @@ def RenameLoop(directory):
 								raise								
 					# Print successfull message
 					print("Found movie " + meta_title + extension)
+				else:
+					# Open a file with access mode "a"
+					file = open(os.path.expanduser("~") + "/not_found.txt", "a")
+					# Append title at the end of file
+					file.write(meta_title)
+					# New line
+					file.write("\n")
+					# Close the file
+					file.close()
 
 # StringBuilder Class
 class StringBuilder:

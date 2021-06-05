@@ -7,18 +7,17 @@ import json
 import urllib.request
 import urllib.error
 import urllib.parse
-import urllib.request
-import urllib.parse
-import urllib.error
 
 if (platform.system() == "Windows"):
 	import winapps
-	
+
 from mutagen import MutagenError
 from mutagen.mp4 import MP4
 from io import StringIO
 
 # Main
+
+
 def main():
 	# Define home directory
 	directory = os.path.dirname(os.path.realpath(__file__))
@@ -34,6 +33,8 @@ def main():
 			raise
 
 # Check if MKVToolNix is installed on Windows
+
+
 def CheckMKVToolNix():
 	for app in winapps.search_installed('MKVToolNix'):
 		if app:
@@ -42,6 +43,8 @@ def CheckMKVToolNix():
 			return False
 
 # Api Call
+
+
 def ApiCall(title, year):
 
 	url = ""
@@ -53,13 +56,16 @@ def ApiCall(title, year):
 	query = urllib.parse.quote(title)
 	# Insert season in query if exists
 	if title != "":
-		url = "https://www.omdbapi.com/?t=" + query + "&" + "y="+ year + "&" + "apikey=" + apikey
+		url = "https://www.omdbapi.com/?t=" + query + \
+			"&" + "y=" + year + "&" + "apikey=" + apikey
 	# JSON to string
 	data = json.load(urllib.request.urlopen(url))
 	# Return data
 	return data
 
 # Rename files
+
+
 def RenameLoop(directory):
 	query = ""
 	# Loop through files
@@ -88,7 +94,7 @@ def RenameLoop(directory):
 				# Get file's length
 				file_length = len(file)
 				# Get file's extension
-				extension = file[file_length - 4 :]
+				extension = file[file_length - 4:]
 				# Get file's name
 				original_filename = os.path.join(root, file)
 				# Get replacemet filename
@@ -114,20 +120,22 @@ def RenameLoop(directory):
 							# Save instance metadata to file
 							video.save()
 						except MutagenError as m_error:
-							print("Metadata title for " + meta_title + " failed with error: " + m_error)
+							print("Metadata title for " + meta_title +
+							      " failed with error: " + m_error)
 					# Add metadata title for mkv files
 					elif extension == ".mkv":
 						try:
 							# Check OS first and MKVToolNix for Windows
 							if ((platform.system() == "Windows") and CheckMKVToolNix()):
 								mkvpropedit = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
-								subprocess.run([mkvpropedit, new_filename, '--edit', 'info', '--set', f'title={meta_title}'])
+								subprocess.run([mkvpropedit, new_filename, '--edit',
+                                                                    'info', '--set', f'title={meta_title}'])
 							elif platform.system() == "Linux":
 								mkvpropedit = "/usr/bin/mkvpropedit"
 								# Check if mkvpropedit exists in linux system
 								if os.path.exists(mkvpropedit):
 									# Call mkvpropedit using subprocess to change metadata title
-									subprocess.run([mkvpropedit, new_filename, '--edit', 'info', '--set', f'title={meta_title}'], capture_output = True)
+									subprocess.run([mkvpropedit, new_filename, '--edit', 'info', '--set', f'title={meta_title}'], capture_output=True)
 								else:
 									# Open a file with access mode "a"
 									file = open(os.path.expanduser("~") + "/meta_titles_not_changed.txt", "a")
@@ -177,10 +185,10 @@ def RenameLoop(directory):
 								# Save image
 								urllib.request.urlretrieve(poster, meta_title + ".jpg")
 								# Print successful massage
-								print("Poster image saved!")
+								print("Poster image saved for " + new_filename)
 						except OSError as e:
 							if e.errno != errno.EEXIST:
-								raise								
+								raise
 					# Print successfull message
 					print("Found movie " + meta_title + extension)
 				else:
@@ -194,6 +202,8 @@ def RenameLoop(directory):
 					file.close()
 
 # StringBuilder Class
+
+
 class StringBuilder:
 	_file_str = None
 
@@ -207,9 +217,12 @@ class StringBuilder:
 		return self._file_str.getvalue()
 
 # Check if poster is already in directory is installed on Windows
+
+
 def CheckPoster(dir, filename):
 	if (os.path.exists(os.path.join(dir, filename + ".jpg"))):
 		return True
+
 
 if __name__ == "__main__":
 	main()

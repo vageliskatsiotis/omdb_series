@@ -17,7 +17,6 @@ from io import StringIO
 
 # Main
 
-
 def main():
 	# Define home directory
 	directory = os.path.dirname(os.path.realpath(__file__))
@@ -34,7 +33,6 @@ def main():
 
 # Check if MKVToolNix is installed on Windows
 
-
 def CheckMKVToolNix():
 	for app in winapps.search_installed('MKVToolNix'):
 		if app:
@@ -43,7 +41,6 @@ def CheckMKVToolNix():
 			return False
 
 # Api Call
-
 
 def ApiCall(title, year):
 
@@ -64,7 +61,6 @@ def ApiCall(title, year):
 	return data
 
 # Rename files
-
 
 def RenameLoop(directory):
 	query = ""
@@ -120,16 +116,14 @@ def RenameLoop(directory):
 							# Save instance metadata to file
 							video.save()
 						except MutagenError as m_error:
-							print("Metadata title for " + meta_title +
-							      " failed with error: " + m_error)
+							print("Metadata title for " + meta_title + " failed with error: " + m_error)
 					# Add metadata title for mkv files
 					elif extension == ".mkv":
 						try:
 							# Check OS first and MKVToolNix for Windows
 							if ((platform.system() == "Windows") and CheckMKVToolNix()):
 								mkvpropedit = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
-								subprocess.run([mkvpropedit, new_filename, '--edit',
-                                                                    'info', '--set', f'title={meta_title}'])
+								subprocess.run([mkvpropedit, new_filename, '--edit', 'info', '--set', f'title={meta_title}'])
 							elif platform.system() == "Linux":
 								mkvpropedit = "/usr/bin/mkvpropedit"
 								# Check if mkvpropedit exists in linux system
@@ -178,7 +172,6 @@ def RenameLoop(directory):
 						try:
 							# Get into directory
 							os.chdir(root)
-
 							# Check if image already exists in dir
 							checkPoster = CheckPoster(root, meta_title)
 							if not checkPoster:
@@ -203,7 +196,6 @@ def RenameLoop(directory):
 
 # StringBuilder Class
 
-
 class StringBuilder:
 	_file_str = None
 
@@ -218,11 +210,9 @@ class StringBuilder:
 
 # Check if poster is already in directory is installed on Windows
 
-
 def CheckPoster(dir, filename):
 	if (os.path.exists(os.path.join(dir, filename + ".jpg"))):
 		return True
-
 
 if __name__ == "__main__":
 	main()

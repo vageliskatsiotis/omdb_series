@@ -158,7 +158,6 @@ def RenameLoop(directory):
 					#Get poster
 					poster = data["Poster"]
 					if poster == "N/A":
-						print("Poster not found!")
 						file = open(os.path.expanduser("~") + "/posters_not_found.txt", "a")
 						# Append title at the end of file
 						file.write(meta_title)
@@ -167,7 +166,7 @@ def RenameLoop(directory):
 						# Close the file
 						file.close()
 						# Print message
-						print("Poster not found for " + new_filename)
+						print("Poster not found for " + meta_title)
 					else:
 						try:
 							# Get into directory
@@ -177,7 +176,7 @@ def RenameLoop(directory):
 							if not checkPoster:
 								# Save image
 								urllib.request.urlretrieve(poster, meta_title + ".jpg")
-								# Print successful massage
+								# Print successful message
 								print("Poster image saved for " + new_filename)
 						except OSError as e:
 							if e.errno != errno.EEXIST:

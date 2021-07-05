@@ -108,7 +108,7 @@ def RenameLoop(directory):
 							# New mp4 instance
 							video = MP4(new_filename)
 							# Add title to instance
-							video["\xa9nam"] = str(file)
+							video["\xa9nam"] = str(meta_title)
 							# Add year to instance
 							video["\xa9day"] = str(data["Year"])
 							# Empty comments if any

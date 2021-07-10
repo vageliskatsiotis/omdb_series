@@ -15,25 +15,10 @@ def main():
 	
 	# Define home directory
 	directory = os.path.dirname(os.path.realpath(__file__))
-	try:
-		# Get into directory
-		os.chdir(directory)
-		# Iterate on current directory
-		RenameLoop(directory)
-
-	# Handle Exceptions - Create file with not found episodes
-	except OSError as e:
-		if e.errno != errno.EEXIST:
-			raise
-		else:
-			# Open a file with access mode "a"
-			file = open(os.path.expanduser("~") + "/not_found.txt", "a")
-			# Append title at the end of file
-			file.write(title)
-			# New line
-			file.write("\n")
-			# Close the file
-			file.close()
+	# Get into directory
+	os.chdir(directory)
+	# Iterate on current directory
+	RenameLoop(directory)
 
 # Check if MKVToolNix is installed on Windows
 def CheckMKVToolNix():

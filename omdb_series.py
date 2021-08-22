@@ -132,7 +132,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 				query = str(sb)[:-1]
 			else:
 				query = title_series
-			if ((query in file) or (query.lower() in file)):
+			if ((query in file) or (query.lower() in file.lower())):
 				if season in file:
 					# Adapt to API's response for episode titles from 1-9 and add 0 in front
 					if len(episode_no) == 1:
@@ -143,7 +143,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 					if len(season) == 1:
 						season = "0" + str(season)
 					# Search parameters in filename eg S01E01
-					search_str = re.search(r"(?:s|S|season|Season^)" + season + r"(?:e|E|episode|Episode^)" + re.escape(new_episode_no), file)
+					search_str = re.search(r"(?:\bseason\b|\bSeason\b|s|S)" + season + r"(?:\s|\-|\.)?(?:\bepisode\b|\bEpisode\b|e|E)" + re.escape(new_episode_no), file)
 					if(search_str):
 						# Get file"s length
 						file_length = len(file)

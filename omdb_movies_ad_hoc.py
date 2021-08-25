@@ -55,8 +55,11 @@ def RenameLoop(directory):
 				if extension == ".mp4":
 					try:
 						video_orig = MP4(original_filename)
-						orig_meta_title = video_orig["\xa9nam"]
-						if str(orig_meta_title[0]) == str(meta_title):
+						try:
+							orig_meta_title = video_orig["\xa9nam"]
+						except:
+							orig_meta_title = ""
+						if str(orig_meta_title) == str(meta_title):
 							continue
 						else:
 							# New mp4 instance

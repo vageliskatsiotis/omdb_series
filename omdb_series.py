@@ -114,11 +114,16 @@ def CheckMKVToolNix():
 		else:
 			return False
 
+
 # Rename files
 def RenameLoop(season, title_series, episode_title, episode_no, episode_year, query, directory):
 	# Loop through files
 	for root, dirs, files in os.walk(directory):
 		for file in files:
+			search_title_separator = re.search(r"(.*\.)+.*", file[0:(len(file) - 4)])
+			title_separator = " "
+			if search_title_separator:
+				title_separator = "."
 			# Split title in words if query is more than one
 			title_array = title_series.split()
 			if len(title_array) > 1:
@@ -126,13 +131,13 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 				sb = StringBuilder()
 				# Build string using split words
 				while i < len(title_array):
-					sb.Append(title_array[i] + ".")
+					sb.Append(title_array[i] + title_separator)
 					i += 1
 				# Assign to query minus the last dot
 				query = str(sb)[:-1]
 			else:
 				query = title_series
-			if ((query in file) or (query.lower() in file.lower())):
+			if (query.lower() in file.lower()):
 				if season in file:
 					# Adapt to API's response for episode titles from 1-9 and add 0 in front
 					if len(episode_no) == 1:

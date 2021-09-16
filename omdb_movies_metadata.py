@@ -7,6 +7,7 @@ import json
 import urllib.request
 import urllib.error
 import urllib.parse
+import requests
 
 if (platform.system() == "Windows"):
 	import winapps
@@ -175,7 +176,10 @@ def RenameLoop(directory):
 							checkPoster = CheckPoster(root, meta_title)
 							if not checkPoster:
 								# Save image
-								urllib.request.urlretrieve(poster, meta_title + ".jpg")
+								r = requests.get(poster)
+								if r.status_code == 200:
+									with open(meta_title + ".jpg", 'wb') as f:
+										f.write(r.content)
 								# Print successful message
 								print("Poster image saved for " + new_filename)
 						except OSError as e:

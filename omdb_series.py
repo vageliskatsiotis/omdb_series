@@ -157,8 +157,10 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 						# Check for invalid characters in response"s episode title and remove them
 						invalid_match_character = re.compile(r'[<>/{}[\]~`?|:\*"]').search(episode_title)
 						if invalid_match_character:
-							# Continue to next episode title if found
-							episode_title = episode_title.replace(str(invalid_match_character[0]), "")
+							# Remove invalid Characters
+							if invalid_match_character[0] == ":":
+								episode_title = re.sub(r'[:]', " -", episode_title)
+							episode_title = re.sub(r'[<>/{}[\]~`?|:\*"]', "", episode_title)
 						# Prepare rename string
 						rename_str = title_series + " - " + "S" + season + "E" + new_episode_no + " - " + episode_title + extension
 						# Get file"s name

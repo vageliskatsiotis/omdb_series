@@ -19,35 +19,36 @@ def main():
 	# Input year
 	year = input("Input Year: ")
 	# Get season and episode no from title
-	search_str = re.search(r"(?:s|S|season|Season^)\d{2}(?:e|E|episode|Episode^)\d{2}", title)
-	season_match = re.search(r"(.+?:s|S|season|Season^)\d{2}", search_str.group(0))
-	season = season_match.group(0)[len(season_match.group(0)) - 2 :]
-	episode_match = re.search(r"(.+?:e|E|episode|Episode^)\d{2}", search_str.group(0))
-	episode_no = episode_match.group(0)[len(episode_match.group(0)) - 2 :]
 	series_match = re.search(r"[^ -]*", title);
 	series = series_match.group(0)
+	search_str = re.search(r"(?:s|S|season|Season^)\d{2}(?:e|E|episode|Episode^)\d{2}", title)
+		if search_str:
+			episode_match = re.search(r"(.+?:e|E|episode|Episode^)\d{2}", search_str.group(0))
+			season_match = re.search(r"(.+?:s|S|season|Season^)\d{2}", search_str.group(0))
+			if season_match:
+				season = season_match.group(0)[len(season_match.group(0)) - 2 :]
+				episode_no = episode_match.group(0)[len(episode_match.group(0)) - 2 :]
+				# Define home directory
+				directory = os.path.dirname(os.path.realpath(__file__))
+				try:
+					# Get into directory
+					os.chdir(directory)
+					# Iterate on current directory
+					RenameLoop(series, title, season, episode_no, year, directory)
 
-	# Define home directory
-	directory = os.path.dirname(os.path.realpath(__file__))
-	try:
-		# Get into directory
-		os.chdir(directory)
-		# Iterate on current directory
-		RenameLoop(series, title, season, episode_no, year, directory)
-
-	# Handle Exceptions - Create file with not found episodes
-	except OSError as e:
-		if e.errno != errno.EEXIST:
-			raise
-		else:
-			# Open a file with access mode "a"
-			file = open(os.path.expanduser("~") + "/not_found.txt", "a")
-			# Append title at the end of file
-			file.write(title)
-			# New line
-			file.write("\n")
-			# Close the file
-			file.close()
+				# Handle Exceptions - Create file with not found episodes
+				except OSError as e:
+					if e.errno != errno.EEXIST:
+						raise
+					else:
+						# Open a file with access mode "a"
+						file = open(os.path.expanduser("~") + "/not_found.txt", "a")
+						# Append title at the end of file
+						file.write(title)
+						# New line
+						file.write("\n")
+						# Close the file
+						file.close()
 
 # Check if MKVToolNix is installed on Windows
 def CheckMKVToolNix():

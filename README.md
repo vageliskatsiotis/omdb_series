@@ -1,6 +1,6 @@
 # omdb_series
 
-Autorename videos and subs on your local series video library using OMDB API written in Python3
+Autorename videos, metadata titles and subs on your local series video library using OMDB API written in Python3
 
 # Directions
 

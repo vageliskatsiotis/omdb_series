@@ -54,8 +54,7 @@ def ApiCall(title, year):
 	query = urllib.parse.quote(title)
 	# Insert season in query if exists
 	if title != "":
-		url = "https://www.omdbapi.com/?t=" + query + \
-			"&" + "y=" + year + "&" + "apikey=" + apikey
+		url = "https://www.omdbapi.com/?t=" + query + "&" + "y=" + year + "&" + "apikey=" + apikey
 	# JSON to string
 	data = json.load(urllib.request.urlopen(url))
 	# Return data
@@ -80,7 +79,7 @@ def RenameLoop(directory):
 					sb = StringBuilder()
 					# Build query string using split words
 					while i < len(title_array):
-						sb.Append(title_array[i] + "+")
+						sb.Append(title_array[i] + " ")
 						i += 1
 					# Assign to query minus (the last plus + year + extension)
 					query = str(sb)[:-12]

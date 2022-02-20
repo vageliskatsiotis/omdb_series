@@ -39,35 +39,36 @@ def RenameLoop(directory):
 		# Loop
 		for file in files:
 			if (".mp4" in file or ".mkv" in file):
-				# Get video name
-				meta_title = root.rsplit('\\', 1)[1]
-				# Get file's length
-				file_length = len(file)
-				# Get file's extension
-				extension = file[file_length - 4:]
 				# Get file's name
 				original_filename = os.path.join(root, file)
-				# Set new filename
-				rename_str = meta_title + extension
-				# Set replacement filename
-				new_filename = os.path.join(root, rename_str)
-				# Rename file
-				os.rename(original_filename, new_filename)
 				# Get file directory
 				fpath = os.path.dirname(os.path.realpath(original_filename))
 				# Set Subs folder path
 				subspath = os.path.join(fpath, "Subs")
+				# Get video name
+				meta_title = root.rsplit('\\', 1)[1]
+				print(meta_title)
 				try:
 					if (os.path.isdir(subspath)):
+						# Get file's length
+						file_length = len(file)
+						# Get file's extension
+						extension = file[file_length - 4:]
+						# Set new filename
+						rename_str = meta_title + extension
+						# Set replacement filename
+						new_filename = os.path.join(root, rename_str)
+						# Rename file
+						os.rename(original_filename, new_filename)
 						os.chdir(subspath)
 						subfiles = []
 						# Get srt files in array
-						for file in glob.glob("*.srt"):
+						for file in glob.glob("*_English.srt"):
 							subfiles.append(file)
 						index = 0
 						# Loop for multiple English srt files (if any)
-						while index < len(subfiles):
-							if ("_English" in str(subfiles[index])):
+						if len(subfiles) > 0:
+							while index < len(subfiles):
 								if (index == 0):
 									orig_subpath = os.path.realpath(subfiles[index])
 									new_meta_title = meta_title + ".srt"
@@ -80,10 +81,9 @@ def RenameLoop(directory):
 									new_subpath = os.path.realpath(new_meta_title)
 									os.rename(orig_subpath, new_subpath)
 									index += 1
-						# Move srt files to main directory
-						subs_to_move = os.listdir(subspath)
-						for f in subs_to_move:
-							shutil.move(os.path.join(subspath, f), os.path.join(fpath, f))
+						# Move new English srt files to main directory
+						for newsub in glob.glob(meta_title + '*' + '.srt'):
+							shutil.move(os.path.join(subspath, newsub), os.path.join(fpath, newsub))
 						os.chdir(fpath)
 						# Remove Subs folder
 						shutil.rmtree(subspath)

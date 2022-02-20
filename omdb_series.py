@@ -165,7 +165,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 						rename_str = title_series + " - " + "S" + season + "E" + new_episode_no + " - " + episode_title + extension
 						# Get file"s name
 						original_filename = os.path.join(root, file)
-						# Get replacemet filename
+						# Get replacement filename
 						new_filename = os.path.join(root, rename_str)
 						# Rename file
 						os.rename(original_filename, new_filename)

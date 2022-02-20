@@ -93,7 +93,7 @@ def RenameLoop(directory):
 				extension = file[file_length - 4:]
 				# Get file's name
 				original_filename = os.path.join(root, file)
-				# Get replacemet filename
+				# Get replacement filename
 				new_filename = os.path.join(root, file)
 				# Rename file
 				os.rename(original_filename, new_filename)

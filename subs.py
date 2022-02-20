@@ -4,6 +4,11 @@ import errno
 import re
 import platform
 import enzyme
+import json
+import urllib.request
+import urllib.error
+import urllib.parse
+import requests
 if (platform.system() == "Windows"):
 	import winapps
 from mutagen import MutagenError
@@ -11,6 +16,7 @@ from mutagen.mp4 import MP4
 from io import StringIO
 import glob
 import shutil
+import omdb_movies_metadata as ommd
 
 # Main
 def main():
@@ -21,6 +27,7 @@ def main():
 	os.chdir(directory)
 	# Iterate on current directory
 	RenameLoop(directory)
+	ommd.main()
 
 # Rename files
 def RenameLoop(directory):
@@ -33,13 +40,19 @@ def RenameLoop(directory):
 		for file in files:
 			if (".mp4" in file or ".mkv" in file):
 				# Get video name
-				meta_title = file[:-4]
+				meta_title = root.rsplit('\\', 1)[1]
 				# Get file's length
 				file_length = len(file)
 				# Get file's extension
 				extension = file[file_length - 4:]
 				# Get file's name
 				original_filename = os.path.join(root, file)
+				# Set new filename
+				rename_str = meta_title + extension
+				# Set replacement filename
+				new_filename = os.path.join(root, rename_str)
+				# Rename file
+				os.rename(original_filename, new_filename)
 				# Get file directory
 				fpath = os.path.dirname(os.path.realpath(original_filename))
 				# Set Subs folder path

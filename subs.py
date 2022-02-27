@@ -46,7 +46,10 @@ def RenameLoop(directory):
 				# Set Subs folder path
 				subspath = os.path.join(fpath, "Subs")
 				# Get video name
-				meta_title = root.rsplit('\\', 1)[1]
+				if platform.system() == "Linux":
+					meta_title = root.rsplit("/", 1)[1]
+				else:
+					meta_title = root.rsplit("\\", 1)[1]
 				print(meta_title)
 				try:
 					if (os.path.isdir(subspath)):

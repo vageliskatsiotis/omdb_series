@@ -49,7 +49,7 @@ def ApiCall(title, year):
 	data = ""
 
 	# Define apikey
-	apikey = ""
+	apikey = "7344e22a"
 	# Escape characters on title
 	query = urllib.parse.quote(title)
 	# Insert season in query if exists
@@ -131,8 +131,11 @@ def RenameLoop(directory):
 									# Call mkvpropedit using subprocess to change metadata title
 									subprocess.run([mkvpropedit, new_filename, '--edit', 'info', '--set', f'title={meta_title}'], capture_output=True)
 								else:
+									metaTitlenotFoundPath = os.path.expanduser("~") + "/meta_titles_not_changed.txt"
+									if os.path.exists(metaTitlenotFoundPath):
+										os.remove(metaTitlenotFoundPath)
 									# Open a file with access mode "a"
-									file = open(os.path.expanduser("~") + "/meta_titles_not_changed.txt", "a")
+									file = open(metaTitlenotFoundPath, "a")
 									# Append title at the end of file
 									file.write(meta_title)
 									# New line
@@ -145,8 +148,11 @@ def RenameLoop(directory):
 							if e.errno != errno.EEXIST:
 								raise
 					else:
+						noMoviefilepath = os.path.expanduser("~") + "/not_found.txt"
+						if os.path.exists(noMoviefilepath):
+							os.remove(noMoviefilepath)
 						# Open a file with access mode "a"
-						file = open(os.path.expanduser("~") + "/not_found.txt", "a")
+						file = open(noMoviefilepath, "a")
 						# Append title at the end of file
 						file.write(meta_title)
 						# New line
@@ -158,7 +164,11 @@ def RenameLoop(directory):
 					#Get poster
 					poster = data["Poster"]
 					if poster == "N/A":
-						file = open(os.path.expanduser("~") + "/posters_not_found.txt", "a")
+						noPosterfilepath = os.path.expanduser("~") + "/posters_not_found.txt"
+						if os.path.exists(noPosterfilepath):
+							os.remove(noPosterfilepath)
+						# Open a file with access mode "a"
+						file = open(noPosterfilepath, "a")
 						# Append title at the end of file
 						file.write(meta_title)
 						# New line
@@ -187,8 +197,11 @@ def RenameLoop(directory):
 					# Print successfull message
 					print("Found movie " + meta_title + extension)
 				else:
+					noMoviefilepath = os.path.expanduser("~") + "/not_found.txt"
+					if os.path.exists(noMoviefilepath):
+						os.remove(noMoviefilepath)
 					# Open a file with access mode "a"
-					file = open(os.path.expanduser("~") + "/not_found.txt", "a")
+					file = open(noMoviefilepath, "a")
 					# Append title at the end of file
 					file.write(meta_title)
 					# New line

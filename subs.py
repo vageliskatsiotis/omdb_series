@@ -19,8 +19,10 @@ import shutil
 import omdb_movies_metadata as ommd
 
 # Main
+
+
 def main():
-	
+
 	# Define home directory
 	directory = os.path.dirname(os.path.realpath(__file__))
 	# Get into directory
@@ -30,6 +32,8 @@ def main():
 	ommd.main()
 
 # Rename files
+
+
 def RenameLoop(directory):
 	# Loop through files
 	for root, dirs, files in os.walk(directory):
@@ -52,17 +56,18 @@ def RenameLoop(directory):
 					meta_title = root.rsplit("\\", 1)[1]
 				print(meta_title)
 				try:
+					# Get file's length
+					file_length = len(file)
+					# Get file's extension
+					extension = file[file_length - 4:]
+					# Set new filename
+					rename_str = meta_title + extension
+					# Set replacement filename
+					new_filename = os.path.join(root, rename_str)
+					# Rename file
+					os.rename(original_filename, new_filename)
+
 					if (os.path.isdir(subspath)):
-						# Get file's length
-						file_length = len(file)
-						# Get file's extension
-						extension = file[file_length - 4:]
-						# Set new filename
-						rename_str = meta_title + extension
-						# Set replacement filename
-						new_filename = os.path.join(root, rename_str)
-						# Rename file
-						os.rename(original_filename, new_filename)
 						os.chdir(subspath)
 						subfiles = []
 						# Get srt files in array
@@ -99,6 +104,7 @@ def RenameLoop(directory):
 				except OSError as e:
 					if e.errno != errno.EEXIST:
 						raise
-						
+
+
 if __name__ == "__main__":
 	main()

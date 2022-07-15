@@ -49,7 +49,7 @@ def ApiCall(title, year):
 	data = ""
 
 	# Define apikey
-	apikey = "7344e22a"
+	apikey = ""
 	# Escape characters on title
 	query = urllib.parse.quote(title)
 	# Insert season in query if exists

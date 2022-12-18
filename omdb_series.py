@@ -5,9 +5,6 @@ import json
 import urllib.request
 import urllib.error
 import urllib.parse
-import urllib.request
-import urllib.parse
-import urllib.error
 import re
 import platform
 if (platform.system() == "Windows"):
@@ -24,7 +21,7 @@ def main():
 	data = ApiCall(title_series, season)
 	# Handle Response, if any
 	if data["Response"] == "True":
-	    Response(title_series, season, data)
+		Response(title_series, season, data)
 	elif data["Response"] == "False":
 		print(data["Error"])
 	else:
@@ -138,23 +135,23 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 			else:
 				query = title_series
 			if (query.lower() in file.lower()):
-				if season in file:
+				if ("S" + str(season)) in file:
 					# Adapt to API's response for episode titles from 1-9 and add 0 in front
-					if len(episode_no) == 1:
+					if len(str(episode_no)) == 1:
 						new_episode_no = "0" + str(episode_no)
 					else:
-						new_episode_no = episode_no
-					# Change season string for single digit No inpu
-					if len(season) == 1:
+						new_episode_no = str(episode_no)
+					# Change season string for single digit input
+					if len(str(season)) == 1:
 						season = "0" + str(season)
 					# Search parameters in filename eg S01E01
 					search_str = re.search(r"(?:\bseason\b|\bSeason\b|s|S)" + season + r"(?:\s|\-|\.)?(?:\bepisode\b|\bEpisode\b|e|E)" + re.escape(new_episode_no), file)
 					if(search_str):
-						# Get file"s length
+						# Get file's length
 						file_length = len(file)
-						# Get file"s extension
+						# Get file's extension
 						extension = file[file_length - 4 :]
-						# Check for invalid characters in response"s episode title and remove them
+						# Check for invalid characters in response's episode title and remove them
 						invalid_match_character = re.compile(r'[<>/{}[\]~`?|:\*"]').search(episode_title)
 						if invalid_match_character:
 							# Remove invalid Characters
@@ -163,7 +160,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 							episode_title = re.sub(r'[<>/{}[\]~`?|:\*"]', "", episode_title)
 						# Prepare rename string
 						rename_str = title_series + " - " + "S" + season + "E" + new_episode_no + " - " + episode_title + extension
-						# Get file"s name
+						# Get file's name
 						original_filename = os.path.join(root, file)
 						# Get replacement filename
 						new_filename = os.path.join(root, rename_str)

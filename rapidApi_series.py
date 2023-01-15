@@ -21,7 +21,7 @@ def main():
 	# Make Api Call
 	data = GetData(title_series)
 	if data:
-	    Response(title_series, season, data)
+		Response(title_series, season, data)
 	else:
 		print("No data found for this Series!")
 

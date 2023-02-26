@@ -127,7 +127,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 			file_length = len(file)
 			# Get file's extension
 			extension = file[file_length - 4:]
-			if (extension == ".mp4" or extension == ".mkv"):
+			if (extension == ".mp4" or extension == ".mkv" or extension == ".srt"):
 				search_title_separator = re.search(r"(.*\.)+.*", file[0:(len(file) - 4)])
 				title_separator = " "
 				if search_title_separator:

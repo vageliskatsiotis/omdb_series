@@ -42,7 +42,8 @@ def GetData(title_series):
 	if result['title'] == title_series:
 		id_length = len(result['id'])
 		imdbId = result['id'][7:id_length - 1]
-		title_series = title_series.replace(":", " -")
+		if ":" in title_series:
+			title_series = title_series.replace(":", " -")
 	poster = result['image']['url']
 	url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
 	querystring = {"tconst":imdbId}

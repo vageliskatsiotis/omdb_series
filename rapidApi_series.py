@@ -18,17 +18,21 @@ from io import StringIO
 def main():
 	# Input season number
 	season = input("Insert Season No: ")
+	# Input series year
+	year = input("Insert Series Year: ")
 	# Make Api Call
-	data = GetData(title_series)
+	data = GetData(title_series, year)
 	if data:
 		Response(title_series, season, data)
 	else:
 		print("No data found for this Series!")
 
 # Get Data
-def GetData(title_series):
+
+
+def GetData(title_series, year):
 	url = "https://online-movie-database.p.rapidapi.com/title/find"
-	querystring = {"q":title_series}
+	querystring = {"q": title_series, "y": year}
 	headers = {
 		"X-RapidAPI-Key": "",
 		"X-RapidAPI-Host": ""

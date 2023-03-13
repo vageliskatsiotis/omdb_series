@@ -97,6 +97,8 @@ def RenameLoop(series, new_title, season, episode_no, year, directory):
 								video = MP4(new_filename)
 								# Add title to instance
 								video["\xa9nam"] = new_title
+								# Add comment to instance
+								video["\xa9cmt"] = meta_title
 								# Add year to instance
 								video["\xa9day"] = year
 								# Save instance metadata to file

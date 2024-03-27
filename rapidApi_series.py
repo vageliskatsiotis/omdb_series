@@ -24,7 +24,7 @@ def main():
 	year = input("Insert Series Year: ")
 	# Make Api Call
 	data = GetData(title_series, year)
-	if data:
+	if len(data[0]) == 1 and len(data[1]) != 0:
 		Response(title_series, season, data)
 	else:
 		print("No data found for this Series!")
@@ -42,26 +42,35 @@ def GetData(title_series, year):
 	response = requests.request(
 		"GET", url, headers=headers, params=querystring, timeout=10)
 	data = json.loads(response.content)
-	result = data['results'][0]
-	imdbId = ""
-	if " -" in title_series:
-		title_series = title_series.replace(" -", ":")
-	if ":" in result['title']:
-		result['title'] = result['title'].replace(":", "")
-	if result['title'] == title_series:
-		id_length = len(result['id'])
-		imdbId = result['id'][7:id_length - 1]
-		if ":" in title_series:
-			title_series = title_series.replace(":", " -")
-	poster = result['image']['url']
-	url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
-	querystring = {"tconst": imdbId}
-	if imdbId == "":
-		print("Imdb ID: " + imdbId + " not found!")
-	else:
-		response = requests.request(
-			"GET", url, headers=headers, params=querystring, timeout=5)
-		data = json.loads(response.content)
+	result = {}
+	poster = {}
+	if	"results" in data:
+		results = data['results']
+		resultsCount = len(results)
+		for i in range(resultsCount):
+			if "title" in results[i] and "year" in results[i] and "titleType" in results[i]:
+				if results[i]['titleType'] == "tvSeries" and results[i]['title'] == title_series and str(results[i]['year']) == year:
+						result = data['results'][i]
+						break
+		imdbId = ""
+		if " -" in title_series:
+			title_series = title_series.replace(" -", ":")
+		if ":" in result['title']:
+			result['title'] = result['title'].replace(":", "")
+		if result['title'] == title_series:
+			id_length = len(result['id'])
+			imdbId = result['id'][7:id_length - 1]
+			if ":" in title_series:
+				title_series = title_series.replace(":", " -")
+		poster = result['image']['url']
+		url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
+		querystring = {"tconst": imdbId}
+		if imdbId == "":
+			print("Imdb ID: " + imdbId + " not found!")
+		else:
+			response = requests.request(
+				"GET", url, headers=headers, params=querystring, timeout=5)
+			data = json.loads(response.content)
 	return data, poster
 
 # Api Response

@@ -67,6 +67,7 @@ def GetData(title_series, year):
 		querystring = {"tconst": imdbId}
 		if imdbId == "":
 			print("Imdb ID: " + imdbId + " not found!")
+			quit()
 		else:
 			response = requests.request(
 				"GET", url, headers=headers, params=querystring, timeout=5)

@@ -24,7 +24,7 @@ def main():
 	year = input("Insert Series Year: ")
 	# Make Api Call
 	data = GetData(title_series, year)
-	if len(data[0]) == 1 and len(data[1]) != 0:
+	if len(data[0]) > 0 and len(data[1]) != 0:
 		Response(title_series, season, data)
 	else:
 		print("No data found for this Series!")

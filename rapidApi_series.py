@@ -52,26 +52,26 @@ def GetData(title_series, year):
 				if results[i]['titleType'] == "tvSeries" and results[i]['title'] == title_series and str(results[i]['year']) == year:
 						result = data['results'][i]
 						break
-		imdbId = ""
-		if " -" in title_series:
-			title_series = title_series.replace(" -", ":")
-		if ":" in result['title']:
-			result['title'] = result['title'].replace(":", "")
-		if result['title'] == title_series:
-			id_length = len(result['id'])
-			imdbId = result['id'][7:id_length - 1]
-			if ":" in title_series:
-				title_series = title_series.replace(":", " -")
-		poster = result['image']['url']
-		url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
-		querystring = {"tconst": imdbId}
-		if imdbId == "":
-			print("Imdb ID: " + imdbId + " not found!")
-			quit()
-		else:
-			response = requests.request(
-				"GET", url, headers=headers, params=querystring, timeout=5)
-			data = json.loads(response.content)
+	imdbId = ""
+	if " -" in title_series:
+		title_series = title_series.replace(" -", ":")
+	if ":" in result['title']:
+		result['title'] = result['title'].replace(":", "")
+	if result['title'] == title_series:
+		id_length = len(result['id'])
+		imdbId = result['id'][7:id_length - 1]
+		if ":" in title_series:
+			title_series = title_series.replace(":", " -")
+	poster = result['image']['url']
+	url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
+	querystring = {"tconst": imdbId}
+	if imdbId == "":
+		print("Imdb ID: " + imdbId + " not found!")
+		quit()
+	else:
+		response = requests.request(
+			"GET", url, headers=headers, params=querystring, timeout=5)
+		data = json.loads(response.content)
 	return data, poster
 
 # Api Response
@@ -94,9 +94,7 @@ def Response(title_series, season, data):
 			# Episode number
 			episode_no = e["episode"]
 			# Episode year
-			episode_year = ""
-			if episode_year:
-				episode_year = str(e["year"])
+			episode_year = str(e["year"])
 			try:
 				# Get into directory
 				os.chdir(dirPath)
@@ -157,10 +155,11 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 			if (extension == ".mp4" or extension == ".mkv" or extension == ".srt"):
 				search_title_separator = re.search(r"(.*\.)+.*", file[0:(len(file) - 4)])
 				title_separator = " "
-				if search_title_separator:
+				if search_title_separator and "#" not in file:
 					title_separator = "."
 				# Split title in words if query is more than one
 				title_array = title_series.split()
+				query = ""
 				if len(title_array) > 1:
 					i = 0
 					sb = StringBuilder()

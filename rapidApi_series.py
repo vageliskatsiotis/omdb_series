@@ -53,15 +53,15 @@ def GetData(title_series, year):
 						result = data['results'][i]
 						break
 	imdbId = ""
-	if " -" in title_series:
-		title_series = title_series.replace(" -", ":")
-	if ":" in result['title']:
-		result['title'] = result['title'].replace(":", "")
 	if result['title'] == title_series:
-		id_length = len(result['id'])
-		imdbId = result['id'][7:id_length - 1]
-		if ":" in title_series:
-			title_series = title_series.replace(":", " -")
+		if " -" in title_series:
+			title_series = title_series.replace(" -", ":")
+		if ":" in result['title']:
+			result['title'] = result['title'].replace(":", "")
+			id_length = len(result['id'])
+			imdbId = result['id'][7:id_length - 1]
+			if ":" in title_series:
+				title_series = title_series.replace(":", " -")
 	poster = result['image']['url']
 	url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
 	querystring = {"tconst": imdbId}
@@ -171,6 +171,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 					query = str(sb)[:-1]
 				else:
 					query = title_series
+				query = query.replace(":", "")
 				if (query.lower() in file.lower()):
 					if ("S" + str(season)) in file:
 						# Adapt to API's response for episode titles from 1-9 and add 0 in front
@@ -199,6 +200,12 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 							# Get file's name
 							original_filename = os.path.join(root, file)
 							# Get replacement filename
+							invalid_match_character_title = re.compile(
+								r'[<>/{}[\]~`?|:\*"]').search(rename_str)
+							if invalid_match_character_title:
+								# Remove invalid Characters
+								if invalid_match_character_title[0] == ":":
+									rename_str = re.sub(r'[:]', " -", rename_str)
 							new_filename = os.path.join(root, rename_str)
 							# Rename file
 							os.rename(original_filename, new_filename)

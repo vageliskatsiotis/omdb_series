@@ -49,7 +49,7 @@ def GetData(title_series, year):
 		resultsCount = len(results)
 		for i in range(resultsCount):
 			if "title" in results[i] and "year" in results[i] and "titleType" in results[i]:
-				if results[i]['titleType'] == "tvSeries" and results[i]['title'] == title_series and str(results[i]['year']) == year:
+				if ((results[i]['titleType'] == "tvSeries" or results[i]['titleType'] == "tvMiniSeries") and results[i]['title'] == title_series and str(results[i]['year']) == year):
 						result = data['results'][i]
 						break
 	imdbId = ""

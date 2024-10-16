@@ -20,8 +20,6 @@ from io import StringIO
 def main():
 	# Input season number
 	season = input("Insert Season No: ")
-	# Input series year
-	year = input("Insert Series Year: ")
 	# Make Api Call
 	data = GetData(title_series, year)
 	if len(data[0]) > 0 and len(data[1]) != 0:
@@ -282,6 +280,8 @@ class StringBuilder:
 
 # Input series title
 title_series = input("Insert Series Title: ")
+# Input series start year
+year = input("Insert Series Start Year: ")
 
 if __name__ == "__main__":
 	while True:

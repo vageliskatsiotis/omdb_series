@@ -96,11 +96,12 @@ def Response(title_series, season, data):
 			# Episode year
 			episode_year = str(e["year"])
 			try:
-				# Get into directory
-				os.chdir(dirPath)
+				# Get into series directory
+				workDir = os.path.join(dirPath, title_series)
+				os.chdir(workDir)
 				# Iterate on current directory
 				RenameLoop(season, title_series, episode_title,
-				           episode_no, episode_year, query, dirPath)
+				           episode_no, episode_year, query, workDir)
 
 			# Handle Exceptions - Create file with not found episodes
 			except OSError as e:

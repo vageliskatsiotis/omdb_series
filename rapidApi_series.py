@@ -23,7 +23,7 @@ def main():
 	# Make Api Call
 	data = GetData(title_series, year)
 	if len(data[0]) > 0 and len(data[1]) != 0:
-		Response(title_series, season, data)
+		Response(data, season)
 	else:
 		print("No data found for this Series!")
 
@@ -70,15 +70,16 @@ def GetData(title_series, year):
 		response = requests.request(
 			"GET", url, headers=headers, params=querystring, timeout=5)
 		data = json.loads(response.content)
-	return data, poster
+	return data, poster, title_series
 
 # Api Response
 
 
-def Response(title_series, season, data):
+def Response(data, season):
 	# Define home directory
 	dirPath = os.path.dirname(os.path.realpath(__file__))
 	# Escape characters on title
+	title_series = data[2]
 	query = urllib.parse.quote(title_series)
 
 	if season != "":
@@ -157,6 +158,8 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 				if search_title_separator and "#" not in file:
 					title_separator = "."
 				# Split title in words if query is more than one
+				if "-" in title_series:
+					title_series = title_series.replace(" -", "")
 				title_array = title_series.split()
 				query = ""
 				if len(title_array) > 1:
@@ -206,61 +209,65 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 								if invalid_match_character_title[0] == ":":
 									rename_str = re.sub(r'[:]', " -", rename_str)
 							new_filename = os.path.join(root, rename_str)
-							# Rename file
-							os.rename(original_filename, new_filename)
-							# Metadata title
-							meta_title = title_series + " - " + "S" + season + \
-								"E" + new_episode_no + " - " + episode_title
-							# Add metadata title and year for mp4 files
-							if extension == ".mp4":
-								try:
-									# New mp4 instance
-									video = MP4(new_filename)
-									# Add title to instance
-									video["\xa9nam"] = meta_title
-									# Add comment to instance
-									video["\xa9cmt"] = meta_title
-									# Add year to instance
-									video["\xa9day"] = episode_year
-									# Save instance metadata to file
-									video.save()
-								except MutagenError as m_error:
-									print("Metadata title for " + new_filename +
-									      " failed with error: " + m_error)
-							# Add metadata title for mkv files
-							elif extension == ".mkv":
-								try:
-									# Check OS first and MKVToolNix for Windows
-									if ((platform.system() == "Windows") and CheckMKVToolNix()):
-										mkvpropedit = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
-										subprocess.run([mkvpropedit, new_filename, '--edit',
-										               'info', '--set', f'title={meta_title}'])
-									elif platform.system() == "Linux":
-										mkvpropedit = "/usr/bin/mkvpropedit"
-										# Check if mkvpropedit exists in linux system
-										if os.path.exists(mkvpropedit):
-											# Call mkvpropedit using subprocess to change metadata title
-											subprocess.run([mkvpropedit, new_filename, '--edit', 'info',
-											               '--set', f'title={meta_title}'], capture_output=True)
-										else:
-											# Open a file with access mode "a"
-											file = open(os.path.expanduser("~") +
-											            "/meta_titles_not_changed.txt", "a")
-											# Append title at the end of file
-											file.write(episode_title)
-											# New line
-											file.write("\n")
-											# Close the file
-											file.close()
-											# Print message
-											print("mkvpropedit does not exist in current system. Metadata title for " +
-											      new_filename + "will not be updated")
-								except OSError as e:
-									if e.errno != errno.EEXIST:
-										raise
-							# Print successfull message
-							print("Found episode No " + new_episode_no +
-							      ": " + episode_title + extension)
+							# Check if file is already changed and exists with new name
+							if os.path.exists(new_filename):
+								continue
+							else:
+								# Rename file
+								os.rename(original_filename, new_filename)
+								# Metadata title
+								meta_title = title_series + " - " + "S" + season + \
+									"E" + new_episode_no + " - " + episode_title
+								# Add metadata title and year for mp4 files
+								if extension == ".mp4":
+									try:
+										# New mp4 instance
+										video = MP4(new_filename)
+										# Add title to instance
+										video["\xa9nam"] = meta_title
+										# Add comment to instance
+										video["\xa9cmt"] = meta_title
+										# Add year to instance
+										video["\xa9day"] = episode_year
+										# Save instance metadata to file
+										video.save()
+									except MutagenError as m_error:
+										print("Metadata title for " + new_filename +
+											  " failed with error: " + m_error)
+								# Add metadata title for mkv files
+								elif extension == ".mkv":
+									try:
+										# Check OS first and MKVToolNix for Windows
+										if ((platform.system() == "Windows") and CheckMKVToolNix()):
+											mkvpropedit = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
+											subprocess.run([mkvpropedit, new_filename, '--edit',
+														   'info', '--set', f'title={meta_title}'])
+										elif platform.system() == "Linux":
+											mkvpropedit = "/usr/bin/mkvpropedit"
+											# Check if mkvpropedit exists in linux system
+											if os.path.exists(mkvpropedit):
+												# Call mkvpropedit using subprocess to change metadata title
+												subprocess.run([mkvpropedit, new_filename, '--edit', 'info',
+															   '--set', f'title={meta_title}'], capture_output=True)
+											else:
+												# Open a file with access mode "a"
+												file = open(os.path.expanduser("~") +
+															"/meta_titles_not_changed.txt", "a")
+												# Append title at the end of file
+												file.write(episode_title)
+												# New line
+												file.write("\n")
+												# Close the file
+												file.close()
+												# Print message
+												print("mkvpropedit does not exist in current system. Metadata title for " +
+													  new_filename + "will not be updated")
+									except OSError as e:
+										if e.errno != errno.EEXIST:
+											raise
+								# Print successfull message
+								print("Found episode No " + new_episode_no +
+									  ": " + episode_title + extension)
 
 # StringBuilder Class
 

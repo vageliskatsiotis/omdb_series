@@ -52,14 +52,10 @@ def GetData(title_series, year):
 						break
 	imdbId = ""
 	if result['title'] == title_series:
-		if " -" in title_series:
-			title_series = title_series.replace(" -", ":")
-		if ":" in result['title']:
-			result['title'] = result['title'].replace(":", "")
-		id_length = len(result['id'])
-		imdbId = result['id'][7:id_length - 1]
 		if ":" in title_series:
 			title_series = title_series.replace(":", " -")
+		id_length = len(result['id'])
+		imdbId = result['id'][7:id_length - 1]
 	poster = result['image']['url']
 	url = "https://online-movie-database.p.rapidapi.com/title/get-seasons"
 	querystring = {"tconst": imdbId}
@@ -148,6 +144,8 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 	# Loop through files
 	for root, dirs, files in os.walk(directory):
 		for file in files:
+			# store rename string
+			title_series_rename_str = title_series
 			# Get file's length
 			file_length = len(file)
 			# Get file's extension
@@ -197,7 +195,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 									episode_title = re.sub(r'[:]', " -", episode_title)
 								episode_title = re.sub(r'[<>/{}[\]~`?|:\*"]', "", episode_title)
 							# Prepare rename string
-							rename_str = title_series + " - " + "S" + season + \
+							rename_str = title_series_rename_str + " - " + "S" + season + \
 								"E" + new_episode_no + " - " + episode_title + extension
 							# Get file's name
 							original_filename = os.path.join(root, file)
@@ -216,7 +214,7 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 								# Rename file
 								os.rename(original_filename, new_filename)
 								# Metadata title
-								meta_title = title_series + " - " + "S" + season + \
+								meta_title = title_series_rename_str + " - " + "S" + season + \
 									"E" + new_episode_no + " - " + episode_title
 								# Add metadata title and year for mp4 files
 								if extension == ".mp4":

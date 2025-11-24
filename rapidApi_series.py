@@ -76,6 +76,8 @@ def Response(data, season):
 	dirPath = os.path.dirname(os.path.realpath(__file__))
 	# Escape characters on title
 	title_series = data[2]
+	if "-" in title_series:
+		title_series = title_series.replace(" -", "")
 	query = urllib.parse.quote(title_series)
 
 	if season != "":
@@ -153,8 +155,8 @@ def RenameLoop(season, title_series, episode_title, episode_no, episode_year, qu
 			if (extension == ".mp4" or extension == ".mkv" or extension == ".srt"):
 				search_title_separator = re.search(r"(.*\.)+.*", file[0:(len(file) - 4)])
 				title_separator = " "
-				if search_title_separator and "#" not in file:
-					title_separator = "."
+				#if search_title_separator and "#" not in file:
+				#	title_separator = "."
 				# Split title in words if query is more than one
 				if "-" in title_series:
 					title_series = title_series.replace(" -", "")

@@ -43,8 +43,8 @@ ffmpeg_template = [
     "",  # output file placeholder
 ]
 
-# Iterate through all MKV files in current folder
-for filename in os.listdir(folder):
+# Iterate through all MKV files in current folder (sorted ascending)
+for filename in sorted(os.listdir(folder), key=str.lower):
     if filename.lower().endswith(".mkv"):
         input_path = os.path.join(folder, filename)
 

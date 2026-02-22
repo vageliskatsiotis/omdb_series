@@ -131,10 +131,7 @@ for filename in sorted(os.listdir(folder), key=str.lower):
                     + output_name
                     + "will not be updated"
                 )
-        # Print end message
-        print(f"=== FINISHED conversion for: {filename} ===\n")
-
-        # Print elapsed time for the conversion
+        # Calculate elapsed time for the conversion
         elapsed = time.time() - start_time
         hrs = int(elapsed // 3600)
         mins = int((elapsed % 3600) // 60)
@@ -145,4 +142,5 @@ for filename in sorted(os.listdir(folder), key=str.lower):
             elapsed_str = f"{mins}m {secs:.2f}s"
         else:
             elapsed_str = f"{secs:.2f}s"
-        print(f"Conversion time for {filename}: {elapsed_str}")
+        # Print end message
+        print(f"=== FINISHED conversion for: {filename} in {elapsed_str} ===\n")

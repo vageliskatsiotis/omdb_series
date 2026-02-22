@@ -3,6 +3,7 @@ import subprocess
 import errno
 import re
 import platform
+import time
 
 if (platform.system() == "Windows"):
 	import winapps
@@ -76,6 +77,7 @@ for filename in os.listdir(folder):
         cmd[-1] = output_name
 
         # Run conversion
+        start_time = time.time()
         subprocess.run(cmd)
 
         # Get file's length
@@ -131,3 +133,16 @@ for filename in os.listdir(folder):
                 )
         # Print end message
         print(f"=== FINISHED conversion for: {filename} ===\n")
+
+        # Print elapsed time for the conversion
+        elapsed = time.time() - start_time
+        hrs = int(elapsed // 3600)
+        mins = int((elapsed % 3600) // 60)
+        secs = elapsed % 60
+        if hrs:
+            elapsed_str = f"{hrs}h {mins}m {secs:.2f}s"
+        elif mins:
+            elapsed_str = f"{mins}m {secs:.2f}s"
+        else:
+            elapsed_str = f"{secs:.2f}s"
+        print(f"Conversion time for {filename}: {elapsed_str}")

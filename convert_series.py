@@ -78,6 +78,11 @@ for filename in os.listdir(folder):
         # Run conversion
         subprocess.run(cmd)
 
+        # Get file's length
+        file_length = len(base_name)
+        # Get file's title without extension
+        meta_title = base_name[:file_length - 4]
+
         # Check OS first and MKVToolNix for Windows
         if (platform.system() == "Windows") and CheckMKVToolNix():
             mkvpropedit = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
@@ -88,7 +93,7 @@ for filename in os.listdir(folder):
                     "--edit",
                     "info",
                     "--set",
-                    f"title={base_name}",
+                    f"title={meta_title}",
                 ]
             )
         elif platform.system() == "Linux":
@@ -103,7 +108,7 @@ for filename in os.listdir(folder):
                         "--edit",
                         "info",
                         "--set",
-                        f"title={base_name}",
+                        f"title={meta_title}",
                     ],
                     capture_output=True,
                 )
@@ -113,7 +118,7 @@ for filename in os.listdir(folder):
                     os.path.expanduser("~") + "/meta_titles_not_changed.txt", "a"
                 )
                 # Append title at the end of file
-                file.write(base_name)
+                file.write(meta_title)
                 # New line
                 file.write("\n")
                 # Close the file

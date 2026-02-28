@@ -1,27 +1,26 @@
+# pylint: disable=missing-module-docstring
+# pylint: disable=missing-function-docstring
 import os
 import subprocess
-import errno
 import re
 import platform
 import time
-
 if (platform.system() == "Windows"):
-	import winapps
-	
-from mutagen import MutagenError
-from mutagen.mp4 import MP4
-from io import StringIO
+    import winapps
 
 # Check if MKVToolNix is installed on Windows
-def CheckMKVToolNix():
-	for app in winapps.search_installed('MKVToolNix'):
-		if app:
-			return True
-		else:
-			return False
+def check_mkv_tool_nix():
+    """Return True if MKVToolNix is installed on Windows."""
+    if platform.system() != "Windows":
+        return False
+    for app in winapps.search_installed("MKVToolNix"):
+        if app:
+            return True
+    return False
 
-# Current folder
-folder = "."
+
+# Current FOLDER
+FOLDER = "."
 
 # FFmpeg command template (medium preset)
 ffmpeg_template = [
@@ -43,10 +42,10 @@ ffmpeg_template = [
     "",  # output file placeholder
 ]
 
-# Iterate through all MKV files in current folder (sorted ascending)
-for filename in sorted(os.listdir(folder), key=str.lower):
+# Iterate through all MKV files in current FOLDER (sorted ascending)
+for filename in sorted(os.listdir(FOLDER), key=str.lower):
     if filename.lower().endswith(".mkv"):
-        input_path = os.path.join(folder, filename)
+        input_path = os.path.join(FOLDER, filename)
 
         # Clean filename: remove year, resolution, x265, Silence
         base_name = re.sub(
@@ -57,7 +56,7 @@ for filename in sorted(os.listdir(folder), key=str.lower):
         )
         base_name = re.sub(r"\s+-\s+$", "", base_name)  # remove trailing dash
         base_name = base_name.strip()
-        output_name = os.path.join(folder, base_name)
+        output_name = os.path.join(FOLDER, base_name)
 
         # Ensure .mkv extension
         if not output_name.lower().endswith(".mkv"):
@@ -78,46 +77,46 @@ for filename in sorted(os.listdir(folder), key=str.lower):
 
         # Run conversion
         start_time = time.time()
-        subprocess.run(cmd)
+        subprocess.run(cmd, check=True)
 
         # Get file's length
         file_length = len(base_name)
         # Get file's title without extension
-        meta_title = base_name[:file_length - 4]
+        meta_title = base_name[: file_length - 4]
 
         # Check OS first and MKVToolNix for Windows
-        if (platform.system() == "Windows") and CheckMKVToolNix():
-            mkvpropedit = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
+        if (platform.system() == "Windows") and check_mkv_tool_nix():
+            MKVPROPEDIT = r"C:\Program Files\MKVToolNix\mkvpropedit.exe"
             subprocess.run(
                 [
-                    mkvpropedit,
+                    MKVPROPEDIT,
                     output_name,
                     "--edit",
                     "info",
                     "--set",
                     f"title={meta_title}",
-                ]
+                ], check=True
             )
         elif platform.system() == "Linux":
-            mkvpropedit = "/usr/bin/mkvpropedit"
+            MKVPROPEDIT = "/usr/bin/mkvpropedit"
             # Check if mkvpropedit exists in linux system
-            if os.path.exists(mkvpropedit):
+            if os.path.exists(MKVPROPEDIT):
                 # Call mkvpropedit using subprocess to change metadata title
                 subprocess.run(
                     [
-                        mkvpropedit,
+                        MKVPROPEDIT,
                         output_name,
                         "--edit",
                         "info",
                         "--set",
                         f"title={meta_title}",
-                    ],
-                    capture_output=True,
+                    ], check=True
+                    , capture_output=True
                 )
             else:
                 # Open a file with access mode "a"
                 file = open(
-                    os.path.expanduser("~") + "/meta_titles_not_changed.txt", "a"
+                    os.path.expanduser("~") + "/meta_titles_not_changed.txt", "a", encoding="utf-8"
                 )
                 # Append title at the end of file
                 file.write(meta_title)

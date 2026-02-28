@@ -23,57 +23,24 @@ def check_mkv_tool_nix():
 # Current FOLDER
 FOLDER = "."
 
-def intel_qsv_available():
-    try:
-        result = subprocess.run(
-            ["ffmpeg", "-hide_banner", "-encoders"], capture_output=True, text=True
-        )
-        return "hevc_qsv" in result.stdout
-    except Exception:
-        return False
-
-
-# Decide encoder
-if intel_qsv_available():
-    print("Intel Quick Sync detected → Using hevc_qsv")
-    ffmpeg_template = [
-        "ffmpeg",
-        "-i",
-        "",
-        "-map",
-        "0",
-        "-c:v",
-        "hevc_qsv",
-        "-global_quality",
-        "27",
-        "-preset",
-        "medium",
-        "-c:a",
-        "copy",
-        "-c:s",
-        "copy",
-        "",
-    ]
-else:
-    print("Intel Quick Sync not found → Using CPU libx265")
-    ffmpeg_template = [
-        "ffmpeg",
-        "-i",
-        "",
-        "-map",
-        "0",
-        "-c:v",
-        "libx265",
-        "-crf",
-        "27",
-        "-preset",
-        "medium",
-        "-c:a",
-        "copy",
-        "-c:s",
-        "copy",
-        "",
-    ]
+ffmpeg_template = [
+    "ffmpeg",
+    "-i",
+    "",
+    "-map",
+    "0",
+    "-c:v",
+    "libx265",
+    "-crf",
+    "26",
+    "-preset",
+    "medium",
+    "-c:a",
+    "copy",
+    "-c:s",
+    "copy",
+    "",
+]
 
 # Iterate through all MKV files in current FOLDER (sorted ascending)
 for filename in sorted(os.listdir(FOLDER), key=str.lower):

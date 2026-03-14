@@ -1,4 +1,5 @@
 import os
+from pickle import FALSE
 import subprocess
 import errno
 import re
@@ -25,7 +26,7 @@ def main():
 		year = input("Input Year: ")
 		try:
 			os.chdir(directory)
-			RenameLoop(None, None, None, None, year, directory)
+			RenameLoop(None, None, None, None, year, directory, True)
 		except OSError as e:
 			if e.errno != errno.EEXIST:
 				raise
@@ -47,7 +48,7 @@ def main():
 					# Get into directory
 					os.chdir(directory)
 					# Iterate on current directory
-					RenameLoop(series, title, season, episode_no, year, directory)
+					RenameLoop(series, title, season, episode_no, year, directory, False)
 
 				# Handle Exceptions - Create file with not found episodes
 				except OSError as e:
@@ -71,9 +72,9 @@ def CheckMKVToolNix():
 			return False
 
 # Rename files (handles both single-file and batch modes)
-def RenameLoop(series, new_title, season, episode_no, year, directory):
+def RenameLoop(series, new_title, season, episode_no, year, directory, is_batch_mode):
 	# Batch mode: series, new_title, season, episode_no are all None
-	is_batch_mode = (series is None and new_title is None and season is None and episode_no is None)
+	# is_batch_mode = (series is None and new_title is None and season is None and episode_no is None)
 
 	# Loop through files
 	for root, dirs, files in os.walk(directory):
